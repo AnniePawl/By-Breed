@@ -1,22 +1,51 @@
 import React from 'react';
-import { StyleSheet, ScrollView, Text, View } from 'react-native';
-import { cats, dogs, petTypes } from './breeds.js';
+import { StyleSheet, ScrollView, Text, View, SafeAreaView, FlatList } from 'react-native';
+import { cats, dogs } from './breeds.js';
 
 export default function App() {
 	return (
-		<ScrollView>
-			{cats.map((item, index) => {
-				return <Item title={`${index} ${item.breed}`} />;
-			})}
-		</ScrollView>
+		<View style={styles.container}>
+			<SafeAreaView style={styles.safearea}>
+				{/* Replaced by flatlist? */}
+
+				<View style={styles.heading_container}>
+					<Text style={styles.heading_text}>The Cat of Your Dreams</Text>
+				</View>
+
+				<FlatList
+					style={styles.flatlist}
+					data={cats.concat(dogs)}
+					renderItem={({ item, index }) => {
+						return <Item title={`${index} ${item.breed} `} data={item} />;
+					}}
+					// keyExtractor
+					keyExtractor={(item) => item.breed}
+				/>
+
+				{/* <ScrollView>
+					{cats.map((item, index) => {
+						return <Item title={`${index} ${item.breed}`} />;
+					})}
+				</ScrollView> */}
+			</SafeAreaView>
+		</View>
 	);
 }
 
 // Text and View Component to Display Breeds
-function Item({ title }) {
+function Item({ title, data }) {
+	const characteristics = Object.keys(data);
+	const char_components = characteristics.map((str) => {
+		return (
+			<Text>
+				{str}:{data[str]}
+			</Text>
+		);
+	});
 	return (
 		<View style={styles.item}>
 			<Text style={styles.title}>{title}</Text>
+			{char_components}
 		</View>
 	);
 }
@@ -24,34 +53,39 @@ function Item({ title }) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#fff',
+		backgroundColor: 'orange',
 		alignItems: 'center',
 		justifyContent: 'center'
 	},
+	heading_container: {
+		height: 20,
+		backgroundColor: 'blue'
+	},
 	scrollView: {
-		// marginTop: statusBarHeight,
-		marginTop: 10,
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center'
 	},
 	item: {
-		// width: Dimensions.get('window').width,
-		padding: 5,
-		paddingLeft: 20,
-		backgroundColor: 'yellow',
-		borderBottomColor: 'black',
-		borderBottomWidth: 1
+		backgroundColor: 'blue',
+		width: '100%',
+		padding: 15,
+		borderBottomColor: 'white',
+		borderBottomWidth: 2
 	},
 	title: {
 		fontSize: 24,
-		fontStyle: 'italic',
-		textDecorationLine: 'underline',
-		fontWeight: 'bold'
+		color: 'white'
 	},
-	fields: {
-		marginLeft: 20,
-		fontWeight: '300',
-		fontSize: 18
+	flatlist: {
+		flex: 1,
+		width: '100%'
+	},
+	safearea: {
+		flex: 1,
+		width: '100%'
 	}
+	// fields: {
+
+	// }
 });
