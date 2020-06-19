@@ -1,22 +1,32 @@
-import React from 'react';
-import { StyleSheet, ScrollView, Text, View, SafeAreaView, FlatList } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, ScrollView, Text, View, SafeAreaView, FlatList, Button } from 'react-native';
 import { cats, dogs } from './breeds.js';
 
 export default function App() {
+	const [ showCats, setshowCats ] = useState(false);
 	return (
 		<View style={styles.container}>
 			<SafeAreaView style={styles.safearea}>
 				{/* Replaced by flatlist? */}
 
 				<View style={styles.heading_container}>
-					<Text style={styles.heading_text}>The Cat of Your Dreams</Text>
+					<Text style={styles.heading_text}>Find the Cat and/or Dog of Your Dreams</Text>
+					<View style={styles.buttonContainer}>
+						<Button
+							title="Switch"
+							color="#841584"
+							onPress={() => {
+								setshowCats(!showCats);
+							}}
+						/>
+					</View>
 				</View>
 
 				<FlatList
 					style={styles.flatlist}
-					data={cats.concat(dogs)}
+					data={showCats ? cats : dogs}
 					renderItem={({ item, index }) => {
-						return <Item title={`${index} ${item.breed} `} data={item} />;
+						return <Item title={`${item.breed} `} data={item} />;
 					}}
 					// keyExtractor
 					keyExtractor={(item) => item.breed}
@@ -58,8 +68,13 @@ const styles = StyleSheet.create({
 		justifyContent: 'center'
 	},
 	heading_container: {
-		height: 20,
-		backgroundColor: 'blue'
+		height: 100,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: 'white'
+	},
+	heading_text: {
+		fontSize: 15
 	},
 	scrollView: {
 		flex: 1,
@@ -67,7 +82,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center'
 	},
 	item: {
-		backgroundColor: 'blue',
+		backgroundColor: 'steelblue',
 		width: '100%',
 		padding: 15,
 		borderBottomColor: 'white',
@@ -84,8 +99,8 @@ const styles = StyleSheet.create({
 	safearea: {
 		flex: 1,
 		width: '100%'
+	},
+	buttonContainer: {
+		margin: 10
 	}
-	// fields: {
-
-	// }
 });
